@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Itens de Solução/">
+    <File Path="docker-compose.yml" />
+  </Folder>
+  <Project Path="Subscription.Api/Subscription.Api.csproj" />
+  <Project Path="Subscription.Domain/Subscription.Domain.csproj" Id="631fe969-37d3-4067-8d6b-88be7880e122" />
+  <Project Path="Subscription.Infra.Data/Subscription.Infra.Data.csproj" Id="744d4614-244c-4af9-9927-03b8c1d0e043" />
+  <Project Path="Subscription.Infra.Messages/Subscription.Infra.Messages.csproj" Id="ea01dcb3-3d64-4414-9256-9f2117a31c45" />
+</Solution>
