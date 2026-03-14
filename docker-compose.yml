@@ -20,12 +20,25 @@ services:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
     ports:
-      - "5672:5672"
+      - "5672:5672" 
       - "15672:15672"
     networks:
       - subscription-network
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
+
+  subscription-seq:
+    image: datalust/seq:latest
+    container_name: subscription-seq
+    ports:
+       - "5341:80"
+    environment:
+       - ACCEPT_EULA=Y
+       - SEQ_FIRSTRUN_ADMINPASSWORD=Coti@2026
+    networks:
+       - subscription-network
+    volumes:
+       - seq_data:/data
 
 networks:
   subscription-network:
@@ -34,3 +47,4 @@ networks:
 volumes:
   sqlserver-data:
   rabbitmq-data:
+  seq_data:

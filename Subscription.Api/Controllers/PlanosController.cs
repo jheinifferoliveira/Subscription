@@ -3,41 +3,32 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Subscription.Domain.Entities;
 using Subscription.Domain.Enums;
+using Subscription.Domain.Interfaces.Repositories;
 using Subscription.Infra.Data.Contexts;
 
 namespace Subscription.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlanosController(AppDbContext context) : ControllerBase
+    public class PlanosController(IUnitOfWork unitOfWork, ILogger<PlanosController> logger) : ControllerBase
     {
 
         [HttpGet("listar")]
         public async Task<IActionResult> ConsultarAsync(int page = 1, int pageSize = 10)
         {
-            var query = context.Set<Plano>().AsQueryable();
+           var result = await unitOfWork.PlanoRepository.GetPageAsync(page, pageSize);
 
-            var total = await query.CountAsync();
-
-            var planos = await query
-                .OrderBy(p => p.Nome)
-                .Skip((page - 1) * pageSize) //página a partir do qual iremos começar 
-                .Take(pageSize) // total de registros
-                .Select(p => new
-                {
-                    id = p.Id,
-                    nome = p.Nome.ToUpper(),
-                    valorMensal = p.ValorMensal,
-                    periodicidade = p.Periodicidade
-                })
-                .ToListAsync();
+            var ipOrigem = HttpContext.Connection.RemoteIpAddress?.ToString();
+            logger.LogInformation(
+                $"Operação de consultas de planos realizadas com sucesso em {DateTime.Now} | IP Origem: {ipOrigem}"
+                );
 
             return Ok(new
             {
                 page,
                 pageSize,
-                total,
-                data = planos
+                result.Total,
+                result.Data
             });
         }
     }
