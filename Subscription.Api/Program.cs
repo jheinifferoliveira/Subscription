@@ -2,6 +2,7 @@ using Scalar.AspNetCore;
 using Serilog;
 using Serilog.Events;
 using Subscription.Api.Extensions;
+using Subscription.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddEndpointsApiExplorer(); //Swagger
 builder.Services.AddSwaggerGen(); //Swagger
 
 builder.Services.AddInfraStructure(builder.Configuration);
+builder.Services.AddDomainServices();
 
 //Configurar o Serilog
 Log.Logger = new LoggerConfiguration().MinimumLevel
@@ -30,6 +32,8 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.MapScalarApiReference(option =>
 {

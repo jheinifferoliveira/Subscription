@@ -1,28 +1,39 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Subscription.Domain.Dtos.Requests;
+using Subscription.Domain.Dtos.Responses;
+using Subscription.Domain.Entities;
+using Subscription.Domain.Interfaces.Services;
 
 namespace Subscription.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClientesController : ControllerBase
+    public class ClientesController(IClienteService clienteService, ILogger<ClientesController> logger) : ControllerBase
     {
+        [ProducesResponseType(typeof(ClienteResponse), 201)]
         [HttpPost("criar")]
-        public async Task<IActionResult> CriarAsync()
-        {
-            return StatusCode(501, new { message = "Não implementado." });
+        public async Task<IActionResult> CriarAsync([FromBody] ClienteRequest request)
+        {  
+            var response = await clienteService.CriarAsync(request);
+
+            logger.LogInformation(
+                $"Operação de cadastro de cliente realizada com sucesso em: {DateTime.Now}. Cliente: " + response
+                );
+
+            return StatusCode(201, response);
         }
 
-        [HttpGet("listar")]
-        public  async Task<IActionResult> ConsultarAsync(int page = 1, int pageSize = 10)
+        [ProducesResponseType(typeof(ClienteResponse), 200)]
+        [HttpGet("obter/{email}")]
+        public async Task<IActionResult> ObterAsync(string email)
         {
-            return StatusCode(501, new { message = "Não implementado." });
-        }
+            var response = await clienteService.ObterAsync(email);
 
-        [HttpGet("obter/{id}")]
-        public async Task<IActionResult> ObterAsync()
-        {
-            return StatusCode(501, new { message = "Não implementado." });
+            logger.LogInformation(
+                $"Operação de consulta de cliente por email realizada com sucesso em: {DateTime.Now}. Cliente: " + response);
+
+            return StatusCode(200, response);
         }
     }
 }

@@ -14,10 +14,10 @@ namespace Subscription.Domain.ValueObjects
         public Email(string endereco)
         {
             if (string.IsNullOrWhiteSpace(endereco))
-                throw new ArgumentNullException("Email é obrigatório.");
+                throw new ArgumentException("Email é obrigatório.");
 
             if (!IsValid(endereco))
-                throw new ArgumentNullException("Email inválido.");
+                throw new ArgumentException("Email inválido.");
 
             Endereco = endereco.ToLower();
         }
